@@ -38,8 +38,8 @@ yarn-error.log
 # BUCK
 buck-out/
 \.buckd/
-*.keystore
-!debug.keystore
+#*.keystore
+#!debug.keystore
 
 # fastlane
 #
@@ -66,5 +66,5 @@ buck-out/
 .vscode
 
 # Configurations
-app/config/env.*.js
-!env.js
+#app/config/env.*.js
+#!env.js
