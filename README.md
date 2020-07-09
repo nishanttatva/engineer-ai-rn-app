@@ -1,6 +1,6 @@
 # Engineer.ai
 
-###Definition:
+### Definition:
 
 1. Periodically (10 seconds) poll following api for posts https://hn.algolia.com/api/v1/search_by_date?tags=story&page=0 
 2. New posts must be appended to old posts
