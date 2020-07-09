@@ -7,4 +7,7 @@ export const palette = {
   lightGrey: "#939AA4",
   lighterGrey: "#CDD4DA",
   angry: "#dd3333",
+  primary: "#5D2555",
+  translucent_white: "rgba(255,255,255,0.5)",
+  transparent: "#00000000",
 }

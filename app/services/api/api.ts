@@ -45,56 +45,34 @@ export class Api {
   }
 
   /**
-   * Gets a list of users.
+   * Gets a posts
    */
-  async getUsers(): Promise<Types.GetUsersResult> {
-    // make the api call
-    const response: ApiResponse<any> = await this.apisauce.get(`/users`)
 
+  async getPostForPage(page: number): Promise<Types.GetPostsResult> {
+    // make the api call
+    const response: ApiResponse<any> = await this.apisauce.get("", { page: page })
     // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
     }
 
-    const convertUser = raw => {
+    const convertPost = raw => {
       return {
-        id: raw.id,
-        name: raw.name,
+        ...raw,
+        objectID: raw.objectID,
+        title: raw.title,
+        url: raw.url,
+        created_at: raw.created_at,
+        author: raw.author,
       }
     }
 
     // transform the data into the format we are expecting
     try {
-      const rawUsers = response.data
-      const resultUsers: Types.User[] = rawUsers.map(convertUser)
-      return { kind: "ok", users: resultUsers }
-    } catch {
-      return { kind: "bad-data" }
-    }
-  }
-
-  /**
-   * Gets a single user by ID
-   */
-
-  async getUser(id: string): Promise<Types.GetUserResult> {
-    // make the api call
-    const response: ApiResponse<any> = await this.apisauce.get(`/users/${id}`)
-
-    // the typical ways to die when calling an api
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response)
-      if (problem) return problem
-    }
-
-    // transform the data into the format we are expecting
-    try {
-      const resultUser: Types.User = {
-        id: response.data.id,
-        name: response.data.name,
-      }
-      return { kind: "ok", user: resultUser }
+      const rawPosts = response.data && response.data.hits ? response.data.hits : []
+      const resultUsers: Types.Post[] = rawPosts.map(convertPost)
+      return { kind: "ok", posts: resultUsers }
     } catch {
       return { kind: "bad-data" }
     }

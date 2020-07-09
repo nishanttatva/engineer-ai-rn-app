@@ -1,9 +1,11 @@
 import { GeneralApiProblem } from "./api-problem"
 
-export interface User {
-  id: number
-  name: string
+export interface Post {
+  objectID:string
+  title: string
+  url: string,
+  created_at:string
+  author: string
 }
 
-export type GetUsersResult = { kind: "ok"; users: User[] } | GeneralApiProblem
-export type GetUserResult = { kind: "ok"; user: User } | GeneralApiProblem
+export type GetPostsResult = { kind: "ok"; posts: Post[] } | GeneralApiProblem

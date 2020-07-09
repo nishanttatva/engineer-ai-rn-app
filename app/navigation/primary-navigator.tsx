@@ -7,7 +7,8 @@
 import React from "react"
 
 import { createNativeStackNavigator } from "react-native-screens/native-stack"
-import { WelcomeScreen, DemoScreen } from "../screens"
+import { PostDetailScreen, PostListScreen } from "../screens"
+import { color } from "../theme"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -22,8 +23,8 @@ import { WelcomeScreen, DemoScreen } from "../screens"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
 export type PrimaryParamList = {
-  welcome: undefined
-  demo: undefined
+  postList: undefined
+  postDetail: undefined
 }
 
 // Documentation: https://github.com/software-mansion/react-native-screens/tree/master/native-stack
@@ -33,12 +34,28 @@ export function PrimaryNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
         gestureEnabled: true,
-      }}
-    >
-      <Stack.Screen name="welcome" component={WelcomeScreen} />
-      <Stack.Screen name="demo" component={DemoScreen} />
+      }}>
+      <Stack.Screen name="postList" component={PostListScreen}
+                    options={{
+                      title: "Posts",
+                      headerTitleStyle: {
+                        color: color.palette.white,
+                      },
+                      headerStyle: {
+                        backgroundColor: color.palette.primary,
+                      },
+                    }}/>
+      <Stack.Screen name="postDetail" component={PostDetailScreen}
+                    options={{
+                      title: "Post Detail",
+                      headerTitleStyle: {
+                        color: color.palette.white,
+                      },
+                      headerStyle: {
+                        backgroundColor: color.palette.primary,
+                      },
+                    }}/>
     </Stack.Navigator>
   )
 }
@@ -52,5 +69,5 @@ export function PrimaryNavigator() {
  *
  * `canExit` is used in ./app/app.tsx in the `useBackButtonHandler` hook.
  */
-const exitRoutes = ["welcome"]
+const exitRoutes = ["postList"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)
