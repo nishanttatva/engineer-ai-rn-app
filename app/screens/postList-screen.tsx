@@ -13,6 +13,7 @@ import { Text, Wallpaper } from "../components"
 import { useNavigation } from "@react-navigation/native"
 import { color, spacing } from "../theme"
 import { useStores } from "../models"
+import moment from "moment"
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -54,8 +55,6 @@ const SEPARATOR: ViewStyle = {
 
 export const PostListScreen: Component = observer(function PostListScreen() {
   // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
-  // OR
   const { postStore } = useStores()
   const { posts, page, is_loading_initial } = postStore
   const [isEndLoading, setIsEndLoading] = useState(false)
@@ -63,37 +62,39 @@ export const PostListScreen: Component = observer(function PostListScreen() {
   // Pull in navigation via hook
   const navigation = useNavigation()
 
+  //set interval to get posts every 10 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       //Interval fetch
-      console.log("Interval fetch", page)
       postStore.getPostsRequest()
     }, 10000)
 
     return () => clearInterval(interval)
   })
 
+  //did mount effect
   useEffect(() => {
     if (page > 0) {
       //Clear data on load
       postStore.clearAll()
     } else {
       //Initial fetch
-      console.log("Initial fetch", page)
       postStore.getPostsRequest()
     }
   }, [])
 
+  //on list end reached callback
   const refetchPosts = async () => {
     //fetching on end of list reached
-    console.log("on end of list reached fetch", page)
-    setIsEndLoading(true)
-    await postStore.getPostsRequest()
-    setIsEndLoading(false)
+    if (!isEndLoading) {
+      setIsEndLoading(true)
+      await postStore.getPostsRequest()
+      setIsEndLoading(false)
+    }
   }
 
+  //on click list item
   const onClickPost = post => {
-    console.log(post)
     postStore.setPostDetail(post)
     navigation.navigate("postDetail")
   }
@@ -120,20 +121,20 @@ export const PostListScreen: Component = observer(function PostListScreen() {
         </View>
         <View style={ROW_CONTAINER}>
           <Text style={LABEL}>{"Created At: "}</Text>
-          <Text style={VALUE}>{item.created_at}</Text>
+          <Text style={VALUE}>{moment(item.created_at).format("DD/MM/YYYY, hh:mm a")}</Text>
         </View>
       </TouchableOpacity>
     )
   }
 
-  const renderItemSeparator = () => <View style={SEPARATOR} />
+  const renderItemSeparator = () => <View style={SEPARATOR}/>
 
   const renderFooter = () =>
-    isEndLoading && <ActivityIndicator size={"large"} color={color.palette.white} style={FOOTER} />
+    isEndLoading && <ActivityIndicator size={"large"} color={color.palette.white} style={FOOTER}/>
 
   return (
     <View style={FULL}>
-      <Wallpaper />
+      <Wallpaper/>
       <FlatList
         style={LIST}
         data={posts}
@@ -146,7 +147,7 @@ export const PostListScreen: Component = observer(function PostListScreen() {
       />
       {is_loading_initial && (
         <View style={LOADER}>
-          <ActivityIndicator size={"large"} color={color.palette.white} />
+          <ActivityIndicator size={"large"} color={color.palette.white}/>
         </View>
       )}
     </View>
